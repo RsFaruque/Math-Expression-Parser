@@ -4,14 +4,46 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class StackParser {
-    // public int evaluate(String exp) {
-    //     ArrayList<String> tokens = tokenize(exp);
+    public int evaluate(String exp) {
+        ArrayList<String> tokens = tokenize(exp);
+        ArrayList<String> postfix = getPostfixExpression(tokens);
+        Stack<String> stack = new Stack<String>();
+        int out = 0;
 
+        for (int i = 0; i < postfix.size(); i++) {
+            switch (postfix.get(i)) {
+                case "+": {
+                    out += Integer.parseInt(stack.pop()) + Integer.parseInt(stack.pop());
+                    stack.push("" + out);
+                    break;
+                }
+                case "-": {
+                    int second = Integer.parseInt(stack.pop());
+                    out += Integer.parseInt(stack.pop()) - second;
+                    stack.push("" + out);
+                    break;
+                }
+                case "*": {
+                    out += Integer.parseInt(stack.pop()) * Integer.parseInt(stack.pop());
+                    stack.push("" + out);
+                    break;
+                }
+                case "/": {
+                    int denominator = Integer.parseInt(stack.pop()); 
+                    out += Integer.parseInt(stack.pop()) / denominator;
+                    stack.push("" + out);
+                    break;
+                }
+                default: {
+                    stack.push(postfix.get(i));
+                }
+            }
+        }
+        return out;
 
-    // }
+    }
 
-    public ArrayList<String> postfixExpression(ArrayList<String> tokens) {
-        // * / take precedence over + -
+    public ArrayList<String> getPostfixExpression(ArrayList<String> tokens) {
         Stack<String> operators = new Stack<String>();
         ArrayList<String> postfix = new ArrayList<String>();
 
@@ -23,8 +55,6 @@ public class StackParser {
                 while (true) {
                     try {
                         int stack = operatorPriotiy(operators.lastElement());
-                        debug("last stack item: " + operators.lastElement() + " priority: " + stack);
-                        debug("stack >= expOp: " + (stack >= expOp));
                         if (stack >= expOp) {
                             postfix.add(operators.pop());
                         } else {
@@ -40,13 +70,11 @@ public class StackParser {
                 postfix.add(tokens.get(i));
             }
         }
-        // debug("items in stack after loop: " + operators.size() + " | items: " + operators.toString());
         if (operators.size() != 0) {
             while (!operators.isEmpty()) {
                 postfix.add(operators.pop());
             }
         }
-        // debug("items in stack after if statement: " + operators.size() + " | items: " + operators.toString());
         return postfix;
     }
 
