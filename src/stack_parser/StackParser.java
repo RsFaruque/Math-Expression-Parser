@@ -36,42 +36,47 @@ public class StackParser {
                     stack.push("" + out);
                     break;
                 }
+                case "^": {
+                    double power = Double.parseDouble(stack.pop());
+                    out = (int) Math.pow(Double.parseDouble(stack.pop()), power);
+                    stack.push("" + out);
+                    break;
+                }
                 default: {
                     stack.push(postfix.get(i));
                 }
             }
         }
         return Integer.parseInt(stack.pop());
-
     }
 
     public ArrayList<String> getPostfixExpression(ArrayList<String> tokens) {
-        HashMap<String, Integer> operatorPriority = new HashMap<String, Integer>();
-        operatorPriority.put("+", 0);
-        operatorPriority.put("-", 0);
-        operatorPriority.put("*", 1);
-        operatorPriority.put("/", 1);
-        operatorPriority.put("^", 2);
-        
-        Stack<String> operators = new Stack<String>();
+        HashMap<String, Integer> operators = new HashMap<String, Integer>();  // the values set priority
+        operators.put("+", 0);
+        operators.put("-", 0);
+        operators.put("*", 1);
+        operators.put("/", 1);
+        operators.put("^", 2);
+
+        Stack<String> operatorStack = new Stack<String>();
         ArrayList<String> postfix = new ArrayList<String>();
 
         for (int i = 0; i < tokens.size(); i++) {
 
-            if (stringIsOperator(tokens.get(i))) {
-                int expOp = operatorPriority.get(tokens.get(i));
+            if (operators.containsKey(tokens.get(i))) {
+                int expOp = operators.get(tokens.get(i));
 
                 while (true) {
                     try {
-                        int stack = operatorPriority.get(operators.lastElement());
+                        int stack = operators.get(operatorStack.lastElement());
                         if (stack >= expOp) {
-                            postfix.add(operators.pop());
+                            postfix.add(operatorStack.pop());
                         } else {
-                            operators.push(tokens.get(i));
+                            operatorStack.push(tokens.get(i));
                             break;
                         }
                     } catch (java.util.NoSuchElementException e) {
-                        operators.push(tokens.get(i));
+                        operatorStack.push(tokens.get(i));
                         break;
                     }
                 }
@@ -79,22 +84,12 @@ public class StackParser {
                 postfix.add(tokens.get(i));
             }
         }
-        if (operators.size() != 0) {
-            while (!operators.isEmpty()) {
-                postfix.add(operators.pop());
+        if (operatorStack.size() != 0) {
+            while (!operatorStack.isEmpty()) {
+                postfix.add(operatorStack.pop());
             }
         }
         return postfix;
-    }
-
-    public boolean stringIsOperator(String x) {
-        if (x.charAt(0) == '+'
-            || x.charAt(0) == '-'
-            || x.charAt(0) == '/'
-            || x.charAt(0) == '*') {
-                return true;
-        }
-        return false;
     }
 
     public ArrayList<String> tokenize(String exp) {
