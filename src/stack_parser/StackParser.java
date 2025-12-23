@@ -87,15 +87,6 @@ public class StackParser {
         }
         return false;
     }
-    public boolean stringIsDigit(String x) {
-        for (int i = 0; i < x.length(); i++) {
-            if (!Character.isDigit(x.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 
     public int operatorPriotiy(String x) {
         if (x.equals("*") || x.equals("/")) {
@@ -124,9 +115,5 @@ public class StackParser {
             tokens.add(x);
         }
         return tokens;
-    }
-
-    void debug(String x) {
-        System.out.println("Debug: " + x);
     }
 }
