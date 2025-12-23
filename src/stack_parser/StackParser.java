@@ -13,24 +13,24 @@ public class StackParser {
         for (int i = 0; i < postfix.size(); i++) {
             switch (postfix.get(i)) {
                 case "+": {
-                    out += Integer.parseInt(stack.pop()) + Integer.parseInt(stack.pop());
+                    out = Integer.parseInt(stack.pop()) + Integer.parseInt(stack.pop());
                     stack.push("" + out);
                     break;
                 }
                 case "-": {
                     int second = Integer.parseInt(stack.pop());
-                    out += Integer.parseInt(stack.pop()) - second;
+                    out = Integer.parseInt(stack.pop()) - second;
                     stack.push("" + out);
                     break;
                 }
                 case "*": {
-                    out += Integer.parseInt(stack.pop()) * Integer.parseInt(stack.pop());
+                    out = Integer.parseInt(stack.pop()) * Integer.parseInt(stack.pop());
                     stack.push("" + out);
                     break;
                 }
                 case "/": {
                     int denominator = Integer.parseInt(stack.pop()); 
-                    out += Integer.parseInt(stack.pop()) / denominator;
+                    out = Integer.parseInt(stack.pop()) / denominator;
                     stack.push("" + out);
                     break;
                 }
@@ -39,7 +39,7 @@ public class StackParser {
                 }
             }
         }
-        return out;
+        return Integer.parseInt(stack.pop());
 
     }
 
