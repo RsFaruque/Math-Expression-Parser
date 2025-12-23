@@ -2,9 +2,11 @@ package stack_parser;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.HashMap;
 
 public class StackParser {
-    public int evaluate(String exp) {
+    
+    public int evaluate(String exp) {        
         ArrayList<String> tokens = tokenize(exp);
         ArrayList<String> postfix = getPostfixExpression(tokens);
         Stack<String> stack = new Stack<String>();
@@ -44,17 +46,24 @@ public class StackParser {
     }
 
     public ArrayList<String> getPostfixExpression(ArrayList<String> tokens) {
+        HashMap<String, Integer> operatorPriority = new HashMap<String, Integer>();
+        operatorPriority.put("+", 0);
+        operatorPriority.put("-", 0);
+        operatorPriority.put("*", 1);
+        operatorPriority.put("/", 1);
+        operatorPriority.put("^", 2);
+        
         Stack<String> operators = new Stack<String>();
         ArrayList<String> postfix = new ArrayList<String>();
 
         for (int i = 0; i < tokens.size(); i++) {
 
             if (stringIsOperator(tokens.get(i))) {
-                int expOp = operatorPriotiy(tokens.get(i));
+                int expOp = operatorPriority.get(tokens.get(i));
 
                 while (true) {
                     try {
-                        int stack = operatorPriotiy(operators.lastElement());
+                        int stack = operatorPriority.get(operators.lastElement());
                         if (stack >= expOp) {
                             postfix.add(operators.pop());
                         } else {
@@ -86,14 +95,6 @@ public class StackParser {
                 return true;
         }
         return false;
-    }
-
-    public int operatorPriotiy(String x) {
-        if (x.equals("*") || x.equals("/")) {
-            return 1;
-        } else {
-            return 0;
-        }
     }
 
     public ArrayList<String> tokenize(String exp) {
