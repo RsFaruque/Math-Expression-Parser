@@ -20,26 +20,21 @@ public class StackParser {
             if (stringIsOperator(tokens.get(i))) {
                 int expOp = operatorPriotiy(tokens.get(i));
 
-                if (operators.isEmpty()) {
-                    operators.push(tokens.get(i));
-                } else {
-                    while (!operators.isEmpty()) {
-                        // try {
-                            int stack = operatorPriotiy(operators.lastElement());
-                            debug("last stack item: " + operators.lastElement() + " priority: " + stack);
-                            debug("stack >= expOp: " + (stack >= expOp));
-                            if (stack >= expOp) {
-                                postfix.add(operators.pop());
-                            } else {
+                while (true) {
+                    try {
+                        int stack = operatorPriotiy(operators.lastElement());
+                        debug("last stack item: " + operators.lastElement() + " priority: " + stack);
+                        debug("stack >= expOp: " + (stack >= expOp));
+                        if (stack >= expOp) {
+                            postfix.add(operators.pop());
+                        } else {
                             operators.push(tokens.get(i));
                             break;
                         }
-                        // } catch (java.util.NoSuchElementException e) {
-                        //     operators.push(tokens.get(i));
-                        //     break;
-                        // }
+                    } catch (java.util.NoSuchElementException e) {
+                        operators.push(tokens.get(i));
+                        break;
                     }
-
                 }
             } else {
                 postfix.add(tokens.get(i));
