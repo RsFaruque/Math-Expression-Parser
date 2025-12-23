@@ -1,0 +1,2 @@
+TODO:
+    - make +/- the root or nearer the root while higher order *,/,() are lower in the tree
