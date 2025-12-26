@@ -6,33 +6,33 @@ import java.util.HashMap;
 
 public class StackParser {
     
-    public int evaluate(String exp) {        
+    public double evaluate(String exp) {        
         ArrayList<String> tokens = tokenize(exp);
         ArrayList<String> postfix = getPostfixExpression(tokens);
         Stack<String> stack = new Stack<String>();
-        int out = 0;
+        double out = 0;
 
         for (int i = 0; i < postfix.size(); i++) {
             switch (postfix.get(i)) {
                 case "+": {
-                    out = Integer.parseInt(stack.pop()) + Integer.parseInt(stack.pop());
+                    out = Double.parseDouble(stack.pop()) + Double.parseDouble(stack.pop());
                     stack.push("" + out);
                     break;
                 }
                 case "-": {
-                    int second = Integer.parseInt(stack.pop());
-                    out = Integer.parseInt(stack.pop()) - second;
+                    double second = Double.parseDouble(stack.pop());
+                    out = Double.parseDouble(stack.pop()) - second;
                     stack.push("" + out);
                     break;
                 }
                 case "*": {
-                    out = Integer.parseInt(stack.pop()) * Integer.parseInt(stack.pop());
+                    out = Double.parseDouble(stack.pop()) * Double.parseDouble(stack.pop());
                     stack.push("" + out);
                     break;
                 }
                 case "/": {
-                    int denominator = Integer.parseInt(stack.pop()); 
-                    out = Integer.parseInt(stack.pop()) / denominator;
+                    double denominator = Double.parseDouble(stack.pop()); 
+                    out = Double.parseDouble(stack.pop()) / denominator;
                     stack.push("" + out);
                     break;
                 }
@@ -47,7 +47,7 @@ public class StackParser {
                 }
             }
         }
-        return Integer.parseInt(stack.pop());
+        return Double.parseDouble(stack.pop());
     }
 
     public ArrayList<String> getPostfixExpression(ArrayList<String> tokens) {
@@ -111,7 +111,7 @@ public class StackParser {
         String prevState = "digit";
         for (int i = 0; i < exp.length(); i++) {  // 10*(8+2)
             ch = exp.charAt(i);
-            if (Character.isDigit(ch)) {
+            if (Character.isDigit(ch) || ch == '.') {
                 x += ch;
                 prevState = "digit";
             } else if (ch == ' ') {
