@@ -1,2 +1,0 @@
-TODO:
-    - StackParser: tokenize() accomodate for doubles
