@@ -57,6 +57,9 @@ public class StackParser {
         operators.put("*", 1);
         operators.put("/", 1);
         operators.put("^", 2);
+        operators.put("(", 3);
+        operators.put(")", -3);
+        int addPriority = 0; // use this for parenthesis
 
         Stack<String> operatorStack = new Stack<String>();
         ArrayList<String> postfix = new ArrayList<String>();
@@ -64,11 +67,19 @@ public class StackParser {
         for (int i = 0; i < tokens.size(); i++) {
 
             if (operators.containsKey(tokens.get(i))) {
-                int expOp = operators.get(tokens.get(i));
+                String operator = tokens.get(i);  // operator from expression
+                
+                // account for parenthesis
+                if (operator.equals("(") || operator.equals(")")) {
+                    addPriority += operators.get(operator);
+                    continue;
+                }
+                
+                int expOp = operators.get(operator) + addPriority;
 
                 while (true) {
                     try {
-                        int stack = operators.get(operatorStack.lastElement());
+                        int stack = operators.get(operatorStack.lastElement());  // top operator in the stack
                         if (stack >= expOp) {
                             postfix.add(operatorStack.pop());
                         } else {
@@ -97,19 +108,32 @@ public class StackParser {
 
         String x = "";
         char ch;
-        for (int i = 0; i < exp.length(); i++) {
+        String prevState = "digit";
+        for (int i = 0; i < exp.length(); i++) {  // 10*(8+2)
             ch = exp.charAt(i);
             if (Character.isDigit(ch)) {
                 x += ch;
+                prevState = "digit";
+            } else if (ch == ' ') {
+                continue;
             } else {
-                tokens.add(x);
-                x = "";
-                tokens.add("" + ch);
+                if (prevState.equals("operator")) {
+                    tokens.add("" + ch);
+                } else {
+                    tokens.add(x);
+                    x = "";
+                    tokens.add("" + ch);
+                }
+                prevState = "operator";
             }
         }
         if (x.length() > 0) {
             tokens.add(x);
         }
         return tokens;
+    }
+
+    public static void debug(String x) {
+        System.out.println("Debug: " + x);
     }
 }
