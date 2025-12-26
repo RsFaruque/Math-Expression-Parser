@@ -132,8 +132,4 @@ public class StackParser {
         }
         return tokens;
     }
-
-    public static void debug(String x) {
-        System.out.println("Debug: " + x);
-    }
 }
